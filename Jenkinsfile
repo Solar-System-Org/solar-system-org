@@ -27,6 +27,8 @@ pipeline {
                             --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
                         
                         dependencyCheckPublisher failedTotalCritical: 2, pattern: 'dependency-check-report.xml', stopBuild: true 
+                        
+                        junit allowEmptyResults: true, stdioRetention: '', testResults: 'dependency-check-junit.xml'
 
                         publishHTML([
                             allowMissing: false,
