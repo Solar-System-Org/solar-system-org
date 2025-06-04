@@ -18,5 +18,15 @@ pipeline {
                 '''
             }
         }
+        stage('OWASP Dependencies Check') {
+            steps {
+                dependencyCheck additionalArguments: '''
+                    --scan \'./\'                                      #  Scan the current directory (root directory)
+                    --out \'./\'                                       # Output to the current directory (root directory)
+                    --format \'ALL\'                                   # Generate all formats
+                    --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
+
+            }
+        }
     }
 }
