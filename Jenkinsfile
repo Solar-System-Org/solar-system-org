@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'nodejs-22-6-0'
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -11,7 +15,10 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                // Add your test commands here
+                sh'''
+                    node -v
+                    npm -v
+                '''     // Add your test commands here
             }
         }
         stage('Deploy') {
