@@ -11,22 +11,28 @@ pipeline {
                 sh 'npm install --no-audit'    // Add your test commands here
             }
         }
-        stage('NPM Dependencies Audit') {
-            steps {
-                sh '''
-                    npm audit --audit-level=critical
-                '''
-            }
-        }
-        stage('OWASP Dependencies Check') {
-            steps {
-                dependencyCheck additionalArguments: '''
-                    --scan \'./\'                                      #  Scan the current directory (root directory)
-                    --out \'./\'                                       # Output to the current directory (root directory)
-                    --format \'ALL\'                                   # Generate all formats
-                    --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
 
+        // Run two stages in parallel
+        stage('Dependencies Scanning') {
+            parallel {
+                stage('Dependency Check') {
+                    steps {
+                        dependencyCheck additionalArguments: '''
+                            --scan \'./\'                                      #  Scan the current directory (root directory)
+                            --out \'./\'                                       # Output to the current directory (root directory)
+                            --format \'ALL\'                                   # Generate all formats
+                            --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
+                    }
+                }
+                stage('NPM Audit') {
+                    steps {
+                        sh '''
+                            npm audit --audit-level=critical
+                        '''
+                    }
+                }
             }
+
         }
     }
 }
