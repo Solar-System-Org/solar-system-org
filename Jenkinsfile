@@ -13,14 +13,17 @@ pipeline {
         }
 
         // Run two stages in parallel
+        // --scan \'./\'      #  Scan the current directory (root directory)
+        // --out \'./\'       # Output to the current directory (root directory)
+        // --format \'ALL\'   # Generate all formats        
         stage('Dependencies Scanning') {
             parallel {
-                stage('Dependency Check') {
+                stage('OWASP Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '''
-                            --scan \'./\'                                      #  Scan the current directory (root directory)
-                            --out \'./\'                                       # Output to the current directory (root directory)
-                            --format \'ALL\'                                   # Generate all formats
+                            --scan \'./\'                                      
+                            --out \'./\'                                       
+                            --format \'ALL\'                                  
                             --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
                     }
                 }
