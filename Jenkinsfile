@@ -26,7 +26,18 @@ pipeline {
                             --format \'ALL\'                                  
                             --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
                         
-                        dependencyCheckPublisher failedTotalCritical: 2, pattern: 'dependency-check-report.xml', stopBuildOnUpdate: true 
+                        dependencyCheckPublisher failedTotalCritical: 2, pattern: 'dependency-check-report.xml', stopBuild: true 
+
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                            reportDir: './',
+                            reportFiles: 'dependency-check-jenkins.html',
+                            reportName: 'Dependency Check HTML Report',
+                            reportTitles: '',
+                            userWrapperFileDirctly: true
+                        ])
                     }
                 }
                 stage('NPM Audit') {
