@@ -25,6 +25,8 @@ pipeline {
                             --out \'./\'                                       
                             --format \'ALL\'                                  
                             --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
+                        
+                        dependencyCheckPublisher failedTotalCritical: 2, pattern: 'dependency-check-report.xml', stopBuildOnUpdate: true 
                     }
                 }
                 stage('NPM Audit') {
