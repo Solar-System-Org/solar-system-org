@@ -12,13 +12,9 @@ pipeline {
                 // Add your build commands here
             }
         }
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Testing...'
-                sh'''
-                    node -v
-                    npm -v
-                '''     // Add your test commands here
+                sh 'npm install --no-audit'    // Add your test commands here
             }
         }
         stage('Deploy') {
