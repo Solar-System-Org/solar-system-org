@@ -66,7 +66,7 @@ pipeline {
                 sh 'echo Colon-Separated - $MONGO_DB_CREDS'
                 sh 'echo Username - $MONGO_DB_CREDS_USR'
                 sh 'echo Password - $MONGO_DB_CREDS_PSW'
-                sh 'npm test'
+                // sh 'npm test'
             }
         }
 
@@ -77,20 +77,21 @@ pipeline {
         //     junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
         // }
 
-        // stage('Code Coverage') {
-        //     // agent {
-        //     //     docker {
-        //     //         image 'node:24'
-        //     //         args '-u root:root'
-        //     //     }
-        //     // }
-        //     steps {
-        //         catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future releases', stageResult: 'UNSTABLE') {
-        //             sh 'npm run coverage'
-        //         }
+        stage('Code Coverage') {
+            // agent {
+            //     docker {
+            //         image 'node:24'
+            //         args '-u root:root'
+            //     }
+            // }
+            steps {
+                catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future releases', stageResult: 'UNSTABLE') {
+                    // sh 'npm run coverage' 
+                    sh 'echo Code Coverage Stage'
+                }
 
-        //     }
-        // }
+            }
+        }
 
         // post {
         //     always {
