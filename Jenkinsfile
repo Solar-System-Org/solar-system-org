@@ -7,6 +7,9 @@ pipeline {
 
     environment {
         MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+        MONGO_DB_CREDS = credentials('mongo-db-creds')
+        MONGO_USERNAME = credentials('mongo-db-username')
+        MONGO_PASSWORD = credentials('mongo-db-password')
     }
 
     stages {
@@ -56,10 +59,17 @@ pipeline {
             }
         }
         stage('Unit Tests') {
-            steps {
-                echo "Performing unit tests"
-                echo "junit will help archive the test results"
+            options {
+                retry(2)
             }
+            steps {
+                sh 'echo Colon-Separated - $MONGO_DB_CREDS'
+                sh 'echo Username - $MONGO_DB_CREDS_USR'
+                sh 'echo Password - $MONGO_DB_CREDS_PSW'
+                // sh 'npm test'
+                
+            }
+        }
             // steps {
             //     withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
             //         sh 'npm test'
@@ -67,5 +77,26 @@ pipeline {
             //     junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
             // }
         }
+        // stage('Code Coverage') {
+        //     // agent {
+        //     //     docker {
+        //     //         image 'node:24'
+        //     //         args '-u root:root'
+        //     //     }
+        //     // }
+        //     steps {
+        //         catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in future releases', stageResult: 'UNSTABLE') {
+        //             sh 'npm run coverage'
+        //         }
+
+        //     }
+        // }
+
+        // post {
+        //     always {
+        //         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+        //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        //     }
+        // }
     }
 }
