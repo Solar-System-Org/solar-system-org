@@ -66,8 +66,7 @@ pipeline {
                 sh 'echo Colon-Separated - $MONGO_DB_CREDS'
                 sh 'echo Username - $MONGO_DB_CREDS_USR'
                 sh 'echo Password - $MONGO_DB_CREDS_PSW'
-                // sh 'npm test'
-                
+                sh 'npm test'
             }
         }
 
