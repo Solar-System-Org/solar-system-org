@@ -148,18 +148,17 @@ pipeline {
                 }
             }
         }
-
-        post {
-            success {
-                echo "Image pushed to ECR: ${ECR_URI}:${IMAGE_TAG}"
-            }
-            failure {
-                echo "Build or push failed."
-            }
+    }
+    post {
+        success {
+            echo "Image pushed to ECR: ${ECR_URI}:${IMAGE_TAG}"
+        }
+        failure {
+            echo "Build or push failed."
+        }
         //     always {
         //         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
         //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         //     }
-        }
     }
 }
