@@ -133,25 +133,15 @@ pipeline {
         //     }
         // }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
-        //             sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_URI}:${IMAGE_TAG}"
-        //         }
-        //     }
-        // }
-
-        // stage('Login to ECR') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 aws ecr get-login-password --region ${AWS_REGION} | \
-        //                 docker login --username AWS --password-stdin ${ECR_URI}
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'printenv'
+                    sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
+                    sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_URI}:${IMAGE_TAG}"
+                }
+            }
+        }
 
         // stage('Push to ECR') {
         //     steps {
