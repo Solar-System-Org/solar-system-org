@@ -93,6 +93,19 @@ pipeline {
             }
         }
 
+        stage('SAST - SonarQube') {
+            steps {
+                timeout(time: 60, unit: 'SECONDS') {            // if timeout occurs, the stage will be aborted
+                    withSonarQubeEnv('SonarQube') {
+                        // sh 'sonar-scanner -Dsonar.projectKey=supercluster-superdata -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin'
+                        sh 'echo SonarQube Scanner Command'
+                        sh 'echo SAST - SonarQube Scanner Stage'
+                    }
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         // post {
         //     always {
         //         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
