@@ -18,6 +18,14 @@ pipeline {
     }
 
     stages {
+         stage('Logging into AWS ECR') {
+            steps {
+                script {
+                    sh "aws ecr get-login-password - region ${AWS_REGION} | docker login - username AWS - password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm install --no-audit'    // Add your test commands here
@@ -125,33 +133,33 @@ pipeline {
         //     }
         // }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
-                    sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_URI}:${IMAGE_TAG}"
-                }
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
+        //             sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_URI}:${IMAGE_TAG}"
+        //         }
+        //     }
+        // }
 
-        stage('Login to ECR') {
-            steps {
-                script {
-                    sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | \
-                        docker login --username AWS --password-stdin ${ECR_URI}
-                    """
-                }
-            }
-        }
+        // stage('Login to ECR') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 aws ecr get-login-password --region ${AWS_REGION} | \
+        //                 docker login --username AWS --password-stdin ${ECR_URI}
+        //             """
+        //         }
+        //     }
+        // }
 
-        stage('Push to ECR') {
-            steps {
-                script {
-                    sh "docker push ${ECR_URI}:${IMAGE_TAG}"
-                }
-            }
-        }
+        // stage('Push to ECR') {
+        //     steps {
+        //         script {
+        //             sh "docker push ${ECR_URI}:${IMAGE_TAG}"
+        //         }
+        //     }
+        // }
     }
     post {
         success {
