@@ -6,6 +6,11 @@ pipeline {
     }
 
     environment {
+        AWS_REGION = 'us-east-1' // Change to your region
+        ECR_REPO = 'solar-system'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        AWS_ACCOUNT_ID = '225989363866' // Change to your AWS account ID
+        ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
         MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
         MONGO_DB_CREDS = credentials('mongo-db-creds')
         MONGO_USERNAME = credentials('mongo-db-username')
@@ -106,11 +111,55 @@ pipeline {
             }
         }
 
-        // post {
+        // stage('Build Image') {
+        //     steps {
+        //         sh 'printenv'
+        //         sh  'docker build -t samishken/solar-system:$GIT_COMMIT .'
+        //         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+        //             sh  'docker push samishken/solar-system:$GIT_COMMIT'
+        //         }
+        //     }
+        // }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
+                    sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_URI}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                script {
+                    sh """
+                        aws ecr get-login-password --region ${AWS_REGION} | \
+                        docker login --username AWS --password-stdin ${ECR_URI}
+                    """
+                }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                script {
+                    sh "docker push ${ECR_URI}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        post {
+            success {
+                echo "Image pushed to ECR: ${ECR_URI}:${IMAGE_TAG}"
+            }
+            failure {
+                echo "Build or push failed."
+            }
         //     always {
         //         junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
         //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         //     }
-        // }
+        }
     }
 }
