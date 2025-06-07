@@ -123,16 +123,6 @@ pipeline {
             // }
         }
 
-        // stage('Build Image') {
-        //     steps {
-        //         sh 'printenv'
-        //         sh  'docker build -t samishken/solar-system:$GIT_COMMIT .'
-        //         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-        //             sh  'docker push samishken/solar-system:$GIT_COMMIT'
-        //         }
-        //     }
-        // }
-
         stage('Build Docker Image') {
             steps {
                 script {
