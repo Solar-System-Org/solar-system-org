@@ -143,14 +143,15 @@ pipeline {
             }
         }
 
-        // stage('Push to ECR') {
-        //     steps {
-        //         script {
-        //             sh "docker push ${ECR_URI}:${IMAGE_TAG}"
-        //         }
-        //     }
-        // }
+        stage('Docker Push to ECR') {
+            steps {
+                script {
+                    sh "docker push ${ECR_URI}:${IMAGE_TAG}"
+                }
+            }
+        }
     }
+
     post {
         success {
             echo "Image pushed to ECR: ${ECR_URI}:${IMAGE_TAG}"
