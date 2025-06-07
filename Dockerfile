@@ -4,7 +4,7 @@ WORKDIR /usr/app
 
 COPY package*.json /usr/app/
 
-RUN npm install
+RUN npm install --omit=dev
 
 COPY . .
 
@@ -14,4 +14,4 @@ ENV MONGO_PASSWORD=passwordPlaceholder
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "app.js" ]
